@@ -17,6 +17,7 @@ Plugin 'klen/python-mode'
 Plugin 'bling/vim-airline'
 Plugin 'tpope/vim-fugitive'
 Plugin 'scrooloose/nerdtree'
+Plugin 'scrooloose/nerdcommenter'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'kien/ctrlp.vim'
 call vundle#end() " all of your Plugins must be added before the following line
@@ -55,6 +56,13 @@ nmap <Leader>p "+p
 nmap <Leader>P "+P
 vmap <Leader>p "+p
 vmap <Leader>P "+P
+
+" Buffer navigation
+map <tab> <C-w><C-w>
+map <C-k> <C-w><Up>
+map <C-j> <C-w><Down>
+map <C-l> <C-w><Right>
+map <C-h> <C-w><Left>
 
 " Source a global configuration file if available
 if filereadable("/etc/vim/vimrc.local")
