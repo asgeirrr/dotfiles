@@ -28,13 +28,8 @@ call vundle#end() " all of your Plugins must be added before the following line
 " " :PluginClean      - confirms removal of unused plugins; append `!` to
 " auto-approve removal
 
-if has("syntax")
-  syntax on
-endif
-
-if has("autocmd")
-  filetype plugin indent on
-endif
+filetype plugin indent on
+syntax on
 
 " GENERAL VIM SETTINGS
 set showmatch	           " Show matching brackets.
@@ -45,7 +40,6 @@ set hlsearch               " Highlight matching search patterns
 set mouse=a	           " Enable mouse usage (all modes)
 set encoding=utf-8
 set clipboard+=unnamedplus " use the clipboards of vim and win
-set paste                  " Paste from a windows or from vim
 set go+=a                  " Visual selection automatically copied to the clipboard
 set foldminlines=20        " Fold only long functions or classes
 set foldlevelstart=1       " Do not fold top-level function or classes
@@ -74,8 +68,13 @@ au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 
 " PLUGIN SETTINGS
 let g:auto_save = 1  " enable AutoSave on Vim startup
-let g:pymode_rope = 1
 let g:pymode_options_max_line_length = 120
+let g:pymode_indent = 1
+let g:pymode_folding = 1
+let g:pymode_motion = 1
+let g:pymode_lint_on_fly = 1
+let g:pymode_lint_message = 1
+let g:pymode_lint_cwindow = 0
 let g:instant_markdown_autostart = 0 
 
 " YouCompleteMe settings
