@@ -20,6 +20,10 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'kien/ctrlp.vim'
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'suan/vim-instant-markdown'
+Plugin 'kylef/apiblueprint.vim'
+Plugin 'editorconfig/editorconfig-vim'
 call vundle#end() " all of your Plugins must be added before the following line
 " " Brief help
 " " :PluginList       - lists configured plugins
@@ -83,16 +87,21 @@ let g:pymode_motion = 1
 let g:pymode_lint_on_fly = 1
 let g:pymode_lint_message = 1
 let g:pymode_lint_cwindow = 0
-let g:instant_markdown_autostart = 0 
+let g:pymode_rope = 0
+let g:pymode_rope_lookup_project = 0
+let g:instant_markdown_autostart = 1
+let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn|pyc))$'
+let g:gitgutter_max_signs = 1000
 
 " YouCompleteMe settings
 let g:clang_user_options='|| exit 0'
 let g:ycm_add_preview_to_completeopt=1
 let g:ycm_autoclose_preview_window_after_completion=1
 let g:ycm_min_num_of_chars_for_completion=2
+let g:ycm_collect_identifiers_from_tags_files = 0
 nnoremap <leader>jd :YcmCompleter GoToDeclaration<CR>
 nnoremap <leader>jf :YcmCompleter GoToDefinition<CR>
-
+noremap pumvisible() ? "\" : " "
 " Airline settings
 let g:airline_theme='powerlineish'
 let g:airline#extensions#tabline#enabled=1 " Enable fancy tab bar
