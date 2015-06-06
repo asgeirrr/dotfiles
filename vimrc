@@ -24,6 +24,9 @@ Plugin 'kchmck/vim-coffee-script'
 Plugin 'suan/vim-instant-markdown'
 Plugin 'kylef/apiblueprint.vim'
 Plugin 'editorconfig/editorconfig-vim'
+Plugin 'octol/vim-cpp-enhanced-highlight'
+Plugin 'mhinz/vim-signify'
+Plugin 'vim-scripts/a.vim'
 call vundle#end() " all of your Plugins must be added before the following line
 " " Brief help
 " " :PluginList       - lists configured plugins
@@ -51,6 +54,7 @@ set foldlevelstart=1       " Do not fold top-level function or classes
 color molokai
 set t_Co=256               " 256 colors of the terminal to support nicer themes
 set background=dark        " Should be turned on when using syntax highlighting on dark background
+set number                 " Line numbers
 
 " Leader shortcuts for system clipboard
 let mapleader = "\<Space>"
@@ -92,6 +96,7 @@ let g:pymode_rope_lookup_project = 0
 let g:instant_markdown_autostart = 1
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn|pyc))$'
 let g:gitgutter_max_signs = 1000
+let g:signify_vcs_list = [ 'svn', ]
 
 " YouCompleteMe settings
 let g:clang_user_options='|| exit 0'
@@ -109,7 +114,20 @@ let g:airline_powerline_fonts = 1
 set laststatus=2 " Show airline even if there is only one buffer
 set noshowmode " Disable standard mode description in favour of airline
 let g:Powerline_symbols = "fancy"
+let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 
 " NERDTree settings
 let NERDTreeDirArrows=0 " Fixes weird symbols in the tree
 let NERDTreeIgnore = ['\.pyc$'] " Do not show these files in the tree
+nmap <leader>ne :NERDTree<cr>
+" C++ settings
+let &makeprg='make -j8 -C ~/Archiv/TextSpotter/build'
+autocmd QuickFixCmdPost [^l]* nested cwindow
+autocmd QuickFixCmdPost    l* nested lwindow
+set tabstop=4
+set shiftwidth=4
+set expandtab
+let g:ycm_collect_identifiers_from_tags_files = 1
+set tags+=./tags
+nmap <leader>m :make<cr>
+
