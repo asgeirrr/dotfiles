@@ -28,13 +28,8 @@ call vundle#end() " all of your Plugins must be added before the following line
 " " :PluginClean      - confirms removal of unused plugins; append `!` to
 " auto-approve removal
 
-if has("syntax")
-  syntax on
-endif
-
-if has("autocmd")
-  filetype plugin indent on
-endif
+filetype plugin indent on
+syntax on
 
 " GENERAL VIM SETTINGS
 set showmatch	           " Show matching brackets.
@@ -80,6 +75,7 @@ let g:instant_markdown_autostart = 0
 
 " YouCompleteMe settings
 let g:clang_user_options='|| exit 0'
+"let g:ycm_path_to_python_interpreter = '/usr/bin/python2'
 let g:ycm_add_preview_to_completeopt=1
 let g:ycm_autoclose_preview_window_after_completion=1
 let g:ycm_min_num_of_chars_for_completion=2
