@@ -1,0 +1,5 @@
+#!/bin/sh
+# To run ctags hooks after rebase
+case "$1" in
+  rebase) exec .git/hooks/post-merge ;;
+esac

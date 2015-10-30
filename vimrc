@@ -26,7 +26,8 @@ Plugin 'kylef/apiblueprint.vim'
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'mhinz/vim-signify'
-Plugin 'vim-scripts/a.vim'
+Plugin 'virtualenv.vim'
+Plugin 'vim-scripts/django.vim'
 call vundle#end() " all of your Plugins must be added before the following line
 " " Brief help
 " " :PluginList       - lists configured plugins
@@ -55,7 +56,9 @@ color molokai
 set t_Co=256               " 256 colors of the terminal to support nicer themes
 set background=dark        " Should be turned on when using syntax highlighting on dark background
 set number                 " Line numbers
-
+set tabstop=4
+set shiftwidth=4
+set expandtab
 " Leader shortcuts for system clipboard
 let mapleader = "\<Space>"
 vmap <Leader>y "+y
@@ -84,6 +87,7 @@ au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 
 " PLUGIN SETTINGS
 let g:auto_save = 1  " enable AutoSave on Vim startup
+let g:auto_save_in_insert_mode = 0  " do not save while in insert mode
 let g:pymode_options_max_line_length = 120
 let g:pymode_indent = 1
 let g:pymode_folding = 1
@@ -93,10 +97,15 @@ let g:pymode_lint_message = 1
 let g:pymode_lint_cwindow = 0
 let g:pymode_rope = 0
 let g:pymode_rope_lookup_project = 0
+
 let g:instant_markdown_autostart = 1
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn|pyc))$'
 let g:gitgutter_max_signs = 1000
 let g:signify_vcs_list = [ 'svn', ]
+
+"Git Gutter settings
+nmap <Leader>nh <Plug>GitGutterNextHunk
+nmap <Leader>ph <Plug>GitGutterPrevHunk
 
 " YouCompleteMe settings
 let g:clang_user_options='|| exit 0'
@@ -104,31 +113,40 @@ let g:clang_user_options='|| exit 0'
 let g:ycm_add_preview_to_completeopt=1
 let g:ycm_autoclose_preview_window_after_completion=1
 let g:ycm_min_num_of_chars_for_completion=2
-let g:ycm_collect_identifiers_from_tags_files = 0
+let g:ycm_collect_identifiers_from_tags_files = 1
 nnoremap <leader>jd :YcmCompleter GoToDeclaration<CR>
 nnoremap <leader>jf :YcmCompleter GoToDefinition<CR>
 noremap pumvisible() ? "\" : " "
+" Add the virtualenv's site-packages to vim path
+py << EOF
+import os
+import sys
+import vim
+if 'VIRTUAL_ENV' in os.environ:
+    project_base_dir = os.environ['VIRTUAL_ENV']
+    sys.path.insert(0, project_base_dir)
+    activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+    execfile(activate_this, dict(__file__=activate_this))
+EOF
+"let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 " Airline settings
 let g:airline_theme='powerlineish'
 let g:airline#extensions#tabline#enabled=1 " Enable fancy tab bar
+let g:airline#extensions#virtualenv#enabled = 1
 let g:airline_powerline_fonts = 1
 set laststatus=2 " Show airline even if there is only one buffer
 set noshowmode " Disable standard mode description in favour of airline
 let g:Powerline_symbols = "fancy"
-let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+
 
 " NERDTree settings
 let NERDTreeDirArrows=0 " Fixes weird symbols in the tree
-let NERDTreeIgnore = ['\.pyc$'] " Do not show these files in the tree
+let NERDTreeIgnore = ['\.pyc$', '__pycache__$'] " Do not show these files in the tree
 nmap <leader>ne :NERDTree<cr>
 " C++ settings
 let &makeprg='make -j8 -C ~/Archiv/TextSpotter/build'
 autocmd QuickFixCmdPost [^l]* nested cwindow
 autocmd QuickFixCmdPost    l* nested lwindow
-set tabstop=4
-set shiftwidth=4
-set expandtab
-let g:ycm_collect_identifiers_from_tags_files = 1
-set tags+=./tags
 nmap <leader>m :make<cr>
-
+" CtrlP settings
+set wildignore+=*/media/*,*/site-packages/*,*/bower_components/*

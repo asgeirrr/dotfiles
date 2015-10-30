@@ -1,6 +1,6 @@
 [user]
 	name = Oskar Hollmann
-	email = oskarhollmann@gmail.com
+	email = oskar@hollmann.me
 [giggle]
 	main-window-maximized = true
 	main-window-geometry = 1155x356+0+0
@@ -13,7 +13,10 @@
 	br = branch
 	ci = commit
 	st = status
+	ctags = !.git/hooks/ctags
 [core]
 	editor = vim
 [push]
 	default = current
+[init]
+	templatedir = ~/.git_template

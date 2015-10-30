@@ -1,0 +1,8 @@
+--python-kinds=-i
+--exclude=.git
+--exclude=node_modules
+--exclude=bower_components
+--exclude=CACHE
+--exclude=data
+--exclude=*/static/*
+
