@@ -28,6 +28,9 @@ Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'mhinz/vim-signify'
 Plugin 'virtualenv.vim'
 Plugin 'vim-scripts/django.vim'
+Plugin 'Chiel92/vim-autoformat'
+Plugin 'fisadev/vim-isort'
+
 call vundle#end() " all of your Plugins must be added before the following line
 " " Brief help
 " " :PluginList       - lists configured plugins
@@ -81,8 +84,8 @@ if filereadable("/etc/vim/vimrc.local")
 endif
 
 " Format XML files
-set equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
-au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
+"set equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
+"au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 
 
 " PLUGIN SETTINGS
@@ -97,9 +100,9 @@ let g:pymode_lint_message = 1
 let g:pymode_lint_cwindow = 0
 let g:pymode_rope = 0
 let g:pymode_rope_lookup_project = 0
+let g:pymode_rope_completion = 0
 
 let g:instant_markdown_autostart = 1
-let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn|pyc))$'
 let g:gitgutter_max_signs = 1000
 let g:signify_vcs_list = [ 'svn', ]
 
@@ -150,3 +153,13 @@ autocmd QuickFixCmdPost    l* nested lwindow
 nmap <leader>m :make<cr>
 " CtrlP settings
 set wildignore+=*/media/*,*/site-packages/*,*/bower_components/*
+let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn|pyc))$'
+nnoremap <leader>ft :CtrlPTag<cr>
+
+
+" Options for GVim
+:set guioptions-=m  "remove menu bar
+:set guioptions-=T  "remove toolbar
+:set guioptions-=r  "remove right-hand scroll bar
+:set guioptions-=L  "remove left-hand scroll bar
+set guifont=Monoid\ 12

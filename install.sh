@@ -6,7 +6,7 @@
 ########## Variables
 dir=~/dotfiles                    # dotfiles directory
 olddir=~/dotfiles_old             # old dotfiles backup directory
-files="vimrc vim fonts gitconfig git_template ctags"    # list of files/folders to symlink in homedir
+files="vimrc vim fonts gitconfig git_template ctags isort.cfg"    # list of files/folders to symlink in homedir
 ##########
 
 # create dotfiles_old in homedir
