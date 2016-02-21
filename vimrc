@@ -15,6 +15,7 @@ Plugin '907th/vim-auto-save'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'klen/python-mode'
 Plugin 'bling/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 Plugin 'tpope/vim-fugitive'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'
@@ -28,8 +29,11 @@ Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'mhinz/vim-signify'
 Plugin 'virtualenv.vim'
 Plugin 'vim-scripts/django.vim'
-Plugin 'Chiel92/vim-autoformat'
 Plugin 'fisadev/vim-isort'
+Plugin 'luochen1990/rainbow'
+Plugin 'tpope/vim-fireplace'
+Plugin 'notpratheek/vim-luna'
+Plugin 'wimstefan/Lightning'
 
 call vundle#end() " all of your Plugins must be added before the following line
 " " Brief help
@@ -55,13 +59,16 @@ set clipboard+=unnamedplus " use the clipboards of vim and win
 set go+=a                  " Visual selection automatically copied to the clipboard
 set foldminlines=20        " Fold only long functions or classes
 set foldlevelstart=1       " Do not fold top-level function or classes
-color molokai
+color luna-term            " luna-term for dark theme or lightning for a light theme
 set t_Co=256               " 256 colors of the terminal to support nicer themes
 set background=dark        " Should be turned on when using syntax highlighting on dark background
 set number                 " Line numbers
 set tabstop=4
 set shiftwidth=4
 set expandtab
+set splitright
+set spell
+
 " Leader shortcuts for system clipboard
 let mapleader = "\<Space>"
 vmap <Leader>y "+y
@@ -77,6 +84,7 @@ map <C-k> <C-w><Up>
 map <C-j> <C-w><Down>
 map <C-l> <C-w><Right>
 map <C-h> <C-w><Left>
+nnoremap nt :tabnew<CR>
 
 " Source a global configuration file if available
 if filereadable("/etc/vim/vimrc.local")
@@ -87,13 +95,19 @@ endif
 "set equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 "au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 
+" Vimgrep customization
+" opens search results in a window w/ links and highlight the matches
+command! -nargs=+ Grep execute 'silent grep! -I -r -n --exclude *.{css,json,js} --exclude-dir .git --exclude-dir migrations --exclude-dir bower_components --exclude-dir node_modules --exclude-dir data --exclude-dir static . -e <args>' | copen | execute 'silent /<args>' | execute ':redraw!'
+" shift-control-* Greps for the word under the cursor
+:nmap <leader>g :Grep <c-r>=expand("<cword>")<cr><cr>
+
 
 " PLUGIN SETTINGS
 let g:auto_save = 1  " enable AutoSave on Vim startup
 let g:auto_save_in_insert_mode = 0  " do not save while in insert mode
 let g:pymode_options_max_line_length = 120
 let g:pymode_indent = 1
-let g:pymode_folding = 1
+let g:pymode_folding = 0
 let g:pymode_motion = 1
 let g:pymode_lint_on_fly = 1
 let g:pymode_lint_message = 1
@@ -105,6 +119,8 @@ let g:pymode_rope_completion = 0
 let g:instant_markdown_autostart = 1
 let g:gitgutter_max_signs = 1000
 let g:signify_vcs_list = [ 'svn', ]
+
+let g:rainbow_active = 1
 
 "Git Gutter settings
 nmap <Leader>nh <Plug>GitGutterNextHunk
@@ -133,7 +149,7 @@ if 'VIRTUAL_ENV' in os.environ:
 EOF
 "let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 " Airline settings
-let g:airline_theme='powerlineish'
+let g:airline_theme='luna' " luna for dark background or papercolor for the light background
 let g:airline#extensions#tabline#enabled=1 " Enable fancy tab bar
 let g:airline#extensions#virtualenv#enabled = 1
 let g:airline_powerline_fonts = 1
