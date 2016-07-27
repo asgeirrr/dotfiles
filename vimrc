@@ -34,6 +34,7 @@ Plugin 'luochen1990/rainbow'
 Plugin 'tpope/vim-fireplace'
 Plugin 'notpratheek/vim-luna'
 Plugin 'wimstefan/Lightning'
+Plugin 'lervag/vimtex'
 
 call vundle#end() " all of your Plugins must be added before the following line
 " " Brief help
@@ -67,7 +68,6 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 set splitright
-set spell
 
 " Leader shortcuts for system clipboard
 let mapleader = "\<Space>"
@@ -97,7 +97,7 @@ endif
 
 " Vimgrep customization
 " opens search results in a window w/ links and highlight the matches
-command! -nargs=+ Grep execute 'silent grep! -I -r -n --exclude *.{css,json,js} --exclude-dir .git --exclude-dir migrations --exclude-dir bower_components --exclude-dir node_modules --exclude-dir data --exclude-dir static . -e <args>' | copen | execute 'silent /<args>' | execute ':redraw!'
+command! -nargs=+ Grep execute 'silent grep! -I -r -n --exclude *.{css,json,js} --exclude-dir .git --exclude-dir migrations --exclude-dir bower_components --exclude-dir node_modules --exclude-dir data --exclude-dir static --exclude-dir out . -e <args>' | copen | execute 'silent /<args>' | execute ':redraw!'
 " shift-control-* Greps for the word under the cursor
 :nmap <leader>g :Grep <c-r>=expand("<cword>")<cr><cr>
 
@@ -115,6 +115,7 @@ let g:pymode_lint_cwindow = 0
 let g:pymode_rope = 0
 let g:pymode_rope_lookup_project = 0
 let g:pymode_rope_completion = 0
+let g:pymode_python = 'python3'
 
 let g:instant_markdown_autostart = 1
 let g:gitgutter_max_signs = 1000
@@ -128,11 +129,11 @@ nmap <Leader>ph <Plug>GitGutterPrevHunk
 
 " YouCompleteMe settings
 let g:clang_user_options='|| exit 0'
-"let g:ycm_path_to_python_interpreter = '/usr/bin/python2'
 let g:ycm_add_preview_to_completeopt=1
 let g:ycm_autoclose_preview_window_after_completion=1
 let g:ycm_min_num_of_chars_for_completion=2
 let g:ycm_collect_identifiers_from_tags_files = 1
+let g:ycm_python_binary_path = '/usr/bin/python3'
 nnoremap <leader>jd :YcmCompleter GoToDeclaration<CR>
 nnoremap <leader>jf :YcmCompleter GoToDefinition<CR>
 noremap pumvisible() ? "\" : " "
@@ -172,6 +173,8 @@ set wildignore+=*/media/*,*/site-packages/*,*/bower_components/*
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn|pyc))$'
 nnoremap <leader>ft :CtrlPTag<cr>
 
+" Vimtex settinfs
+let g:vimtex_latexmk_continuous=1
 
 " Options for GVim
 :set guioptions-=m  "remove menu bar
