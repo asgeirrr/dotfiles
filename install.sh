@@ -6,7 +6,7 @@
 ########## Variables
 dir=~/dotfiles                    # dotfiles directory
 olddir=~/dotfiles_old             # old dotfiles backup directory
-files="vimrc vim fonts gitconfig git_template ctags isort.cfg"    # list of files/folders to symlink in homedir
+files="vimrc vim fonts gitconfig gitignore git_template ctags isort.cfg"    # list of files/folders to symlink in homedir
 ##########
 
 # create dotfiles_old in homedir
@@ -31,7 +31,3 @@ for file in $files; do
     echo "Creating symlink to $file in home directory."
     ln -s $dir/$file ~/.$file
 done
-
-# Make Git use .git_template folder as a template folder to run ctags hooks.
-#    tip: for existing repositories without the hooks, run "git init"
-git config --global init.templatedir '~/.git_template'

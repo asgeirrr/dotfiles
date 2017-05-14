@@ -16,6 +16,7 @@
 	ctags = !.git/hooks/ctags
 [core]
 	editor = vim
+    excludesfile = ~/.gitignore
 [push]
 	default = current
 [init]
