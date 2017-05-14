@@ -86,6 +86,9 @@ map <C-l> <C-w><Right>
 map <C-h> <C-w><Left>
 nnoremap nt :tabnew<CR>
 
+" Shortcut to copy current file path
+nmap cp :let @" = expand("%")<cr><cr>
+
 " Source a global configuration file if available
 if filereadable("/etc/vim/vimrc.local")
   source /etc/vim/vimrc.local
@@ -173,9 +176,9 @@ set wildignore+=*/media/*,*/site-packages/*,*/bower_components/*
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn|pyc))$'
 nnoremap <leader>ft :CtrlPTag<cr>
 
-" Vimtex settinfs
+" Vimtex settings
 let g:vimtex_latexmk_continuous=1
-
+let g:vimtex_latexmk_options='-pdf -file-line-error -synctex=1 -interaction=nonstopmode -shell-escape'
 " Options for GVim
 :set guioptions-=m  "remove menu bar
 :set guioptions-=T  "remove toolbar
