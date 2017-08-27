@@ -25,13 +25,11 @@ Plugin 'kchmck/vim-coffee-script'
 Plugin 'suan/vim-instant-markdown'
 Plugin 'kylef/apiblueprint.vim'
 Plugin 'editorconfig/editorconfig-vim'
-Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'mhinz/vim-signify'
 Plugin 'virtualenv.vim'
 Plugin 'vim-scripts/django.vim'
 Plugin 'fisadev/vim-isort'
 Plugin 'luochen1990/rainbow'
-Plugin 'tpope/vim-fireplace'
 Plugin 'notpratheek/vim-luna'
 Plugin 'wimstefan/Lightning'
 Plugin 'lervag/vimtex'
@@ -68,7 +66,8 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 set splitright
-
+set undofile               " Maintain undo history between sessions
+set undodir=~/.vim/undodir " Save the undo history here rather than in the current workdir
 " Leader shortcuts for system clipboard
 let mapleader = "\<Space>"
 vmap <Leader>y "+y
@@ -100,10 +99,25 @@ endif
 
 " Vimgrep customization
 " opens search results in a window w/ links and highlight the matches
-command! -nargs=+ Grep execute 'silent grep! -I -r -n --exclude *.{css,json,js} --exclude-dir .git --exclude-dir migrations --exclude-dir bower_components --exclude-dir node_modules --exclude-dir data --exclude-dir static --exclude-dir out . -e <args>' | copen | execute 'silent /<args>' | execute ':redraw!'
-" shift-control-* Greps for the word under the cursor
-:nmap <leader>g :Grep <c-r>=expand("<cword>")<cr><cr>
 
+" Use The Silver Searcher if available and fallback to Grep otherwise
+if executable('ag')
+  " Use ag over grep
+  set grepprg=ag\ --nogroup\ --nocolor
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag %s -l -g ""'
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
+  :nmap <leader>g :grep "\b<C-R><C-W>\b"<CR>:cw<CR>
+  " Prepare Ag command to be mapped to a convenience key
+  command -nargs=+ -complete=file -bar Ag silent! grep! "<args>" -S|cwindow|redraw!
+  " map Ag to \
+  nnoremap \ :Ag<SPACE>
+else
+  command! -nargs=+ Grep execute 'silent grep! -I -r -n --exclude *.{css,json,js} --exclude-dir .git --exclude-dir migrations --exclude-dir bower_components --exclude-dir node_modules --exclude-dir data --exclude-dir static --exclude-dir  media --exclude-dir out . -e <args>' | copen | execute 'silent /<args>' | execute ':redraw!'  
+  " leader-G Greps for the word under the cursor
+  :nmap <leader>g :Grep <c-r>=expand("<cword>")<cr><cr>
+endif
 
 " PLUGIN SETTINGS
 let g:auto_save = 1  " enable AutoSave on Vim startup
@@ -166,11 +180,14 @@ let g:Powerline_symbols = "fancy"
 let NERDTreeDirArrows=0 " Fixes weird symbols in the tree
 let NERDTreeIgnore = ['\.pyc$', '__pycache__$'] " Do not show these files in the tree
 nmap <leader>ne :NERDTree<cr>
+map <leader>nf :NERDTreeFind<cr>
+
 " C++ settings
 let &makeprg='make -j8 -C ~/Archiv/TextSpotter/build'
 autocmd QuickFixCmdPost [^l]* nested cwindow
 autocmd QuickFixCmdPost    l* nested lwindow
 nmap <leader>m :make<cr>
+
 " CtrlP settings
 set wildignore+=*/media/*,*/site-packages/*,*/bower_components/*
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn|pyc))$'
@@ -179,6 +196,7 @@ nnoremap <leader>ft :CtrlPTag<cr>
 " Vimtex settings
 let g:vimtex_latexmk_continuous=1
 let g:vimtex_latexmk_options='-pdf -file-line-error -synctex=1 -interaction=nonstopmode -shell-escape'
+
 " Options for GVim
 :set guioptions-=m  "remove menu bar
 :set guioptions-=T  "remove toolbar
