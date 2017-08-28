@@ -140,6 +140,8 @@ let g:signify_vcs_list = [ 'svn', ]
 
 let g:rainbow_active = 1
 
+let g:vim_isort_python_version = 'python3'
+
 "Git Gutter settings
 nmap <Leader>nh <Plug>GitGutterNextHunk
 nmap <Leader>ph <Plug>GitGutterPrevHunk
