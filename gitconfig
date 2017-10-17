@@ -14,10 +14,24 @@
 	ci = commit
 	st = status
 	ctags = !.git/hooks/ctags
+	please = push --force-with-lease
 [core]
 	editor = vim
     excludesfile = ~/.gitignore
+[pager]
+    log = /usr/share/git/diff-highlight/diff-highlight | less
+    show = /usr/share/git/diff-highlight/diff-highlight | less
+    diff = /usr/share/git/diff-highlight/diff-highlight | less
 [push]
 	default = current
 [init]
 	templatedir = ~/.git_template
+[merge]
+    conflictstyle = diff3
+[rerere]
+    enabled = true
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
