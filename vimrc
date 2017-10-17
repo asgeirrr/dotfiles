@@ -10,22 +10,20 @@ filetype off                   " required
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 " " let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
-Plugin '907th/vim-auto-save'
+Plugin '907th/vim-auto-save'  " Replace this with simple config
 Plugin 'Valloric/YouCompleteMe'
-Plugin 'klen/python-mode'
+Plugin 'vim-syntastic/syntastic'
+Plugin 'python-mode/python-mode'
 Plugin 'bling/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'tpope/vim-fugitive'
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/nerdcommenter'
 Plugin 'airblade/vim-gitgutter'
-Plugin 'kien/ctrlp.vim'
-Plugin 'kchmck/vim-coffee-script'
+Plugin 'scrooloose/nerdtree'
+Plugin 'scrooloose/nerdcommenter'  " Replace this with simple command
+Plugin 'kien/ctrlp.vim'            " Remove this?
 Plugin 'suan/vim-instant-markdown'
 Plugin 'kylef/apiblueprint.vim'
 Plugin 'editorconfig/editorconfig-vim'
-Plugin 'mhinz/vim-signify'
 Plugin 'virtualenv.vim'
 Plugin 'vim-scripts/django.vim'
 Plugin 'fisadev/vim-isort'
@@ -54,7 +52,7 @@ set incsearch	           " Incremental search
 set hlsearch               " Highlight matching search patterns
 set mouse=a	           " Enable mouse usage (all modes)
 set encoding=utf-8
-set clipboard+=unnamedplus " use the clipboards of vim and win
+set clipboard+=unnamedplus " use the clipboards of vim and X
 set go+=a                  " Visual selection automatically copied to the clipboard
 set foldminlines=20        " Fold only long functions or classes
 set foldlevelstart=1       " Do not fold top-level function or classes
@@ -68,6 +66,12 @@ set expandtab
 set splitright
 set undofile               " Maintain undo history between sessions
 set undodir=~/.vim/undodir " Save the undo history here rather than in the current workdir
+set path=**                " Search down in subfolders with tab completion for file-related tasks
+set wildmenu               " Display all matching files/tags/commands/whatever when we tab complete
+
+" Override comment colour
+hi Comment ctermfg=244 
+
 " Leader shortcuts for system clipboard
 let mapleader = "\<Space>"
 vmap <Leader>y "+y
@@ -85,6 +89,12 @@ map <C-l> <C-w><Right>
 map <C-h> <C-w><Left>
 nnoremap nt :tabnew<CR>
 
+" Quickfix navigation
+nnoremap <leader>ln :lnext<CR>
+nnoremap <leader>lp :lprevious<CR>
+nnoremap <leader>lo :lopen<CR>
+nnoremap <leader>lc :lclose<CR>
+
 " Shortcut to copy current file path
 nmap cp :let @" = expand("%")<cr><cr>
 
@@ -92,10 +102,6 @@ nmap cp :let @" = expand("%")<cr><cr>
 if filereadable("/etc/vim/vimrc.local")
   source /etc/vim/vimrc.local
 endif
-
-" Format XML files
-"set equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
-"au FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
 
 " Vimgrep customization
 " opens search results in a window w/ links and highlight the matches
@@ -122,25 +128,33 @@ endif
 " PLUGIN SETTINGS
 let g:auto_save = 1  " enable AutoSave on Vim startup
 let g:auto_save_in_insert_mode = 0  " do not save while in insert mode
-let g:pymode_options_max_line_length = 120
-let g:pymode_indent = 1
-let g:pymode_folding = 0
-let g:pymode_motion = 1
-let g:pymode_lint_on_fly = 1
-let g:pymode_lint_message = 1
-let g:pymode_lint_cwindow = 0
-let g:pymode_rope = 0
-let g:pymode_rope_lookup_project = 0
-let g:pymode_rope_completion = 0
-let g:pymode_python = 'python3'
 
 let g:instant_markdown_autostart = 1
+
 let g:gitgutter_max_signs = 1000
-let g:signify_vcs_list = [ 'svn', ]
 
 let g:rainbow_active = 1
 
 let g:vim_isort_python_version = 'python3'
+
+" Pymode settings
+let g:pymode_lint = 0  " Disable to use linting from Syntastic
+let g:pymode_options_max_line_length = 80
+let g:pymode_indent = 1
+let g:pymode_folding = 0
+let g:pymode_motion = 1
+let g:pymode_rope = 0
+
+" Syntastic settings
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_python_checkers = ['flake8']
 
 "Git Gutter settings
 nmap <Leader>nh <Plug>GitGutterNextHunk
@@ -152,22 +166,11 @@ let g:ycm_add_preview_to_completeopt=1
 let g:ycm_autoclose_preview_window_after_completion=1
 let g:ycm_min_num_of_chars_for_completion=2
 let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_python_binary_path = '/usr/bin/python3'
+let g:ycm_python_binary_path = '/usr/bin/python2'
 nnoremap <leader>jd :YcmCompleter GoToDeclaration<CR>
 nnoremap <leader>jf :YcmCompleter GoToDefinition<CR>
 noremap pumvisible() ? "\" : " "
-" Add the virtualenv's site-packages to vim path
-py << EOF
-import os
-import sys
-import vim
-if 'VIRTUAL_ENV' in os.environ:
-    project_base_dir = os.environ['VIRTUAL_ENV']
-    sys.path.insert(0, project_base_dir)
-    activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
-    execfile(activate_this, dict(__file__=activate_this))
-EOF
-"let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+
 " Airline settings
 let g:airline_theme='luna' " luna for dark background or papercolor for the light background
 let g:airline#extensions#tabline#enabled=1 " Enable fancy tab bar
@@ -199,9 +202,8 @@ nnoremap <leader>ft :CtrlPTag<cr>
 let g:vimtex_latexmk_continuous=1
 let g:vimtex_latexmk_options='-pdf -file-line-error -synctex=1 -interaction=nonstopmode -shell-escape'
 
-" Options for GVim
-:set guioptions-=m  "remove menu bar
-:set guioptions-=T  "remove toolbar
-:set guioptions-=r  "remove right-hand scroll bar
-:set guioptions-=L  "remove left-hand scroll bar
-set guifont=Monoid\ 12
+" Automatically update copyright notice with current year
+autocmd BufWritePre *
+  \ if &modified |
+  \   exe "g#\\cCOPYRIGHT \(C\) \\(".strftime("%Y")."\\)\\@![0-9]\\{4\\}\\(-".strftime("%Y")."\\)\\@!#s#\\([0-9]\\{4\\}\\)\\(-[0-9]\\{4\\}\\)\\?#\\1-".strftime("%Y") |
+  \ endif
