@@ -69,9 +69,19 @@ set undodir=~/.vim/undodir " Save the undo history here rather than in the curre
 set path=**                " Search down in subfolders with tab completion for file-related tasks
 set wildmenu               " Display all matching files/tags/commands/whatever when we tab complete
 set tags=.git/tags
+set number relativenumber
 
 " Override comment colour
-hi Comment ctermfg=244 
+hi Comment ctermfg=244
+
+" Filetype settings
+autocmd FileType gitcommit,rst,markdown setlocal spell
+
+" Disable arrow keys
+noremap <Up> <Nop>
+noremap <Down> <Nop>
+noremap <Left> <Nop>
+noremap <Right> <Nop>
 
 " Leader shortcuts for system clipboard
 let mapleader = "\<Space>"
@@ -83,7 +93,6 @@ vmap <Leader>p "+p
 vmap <Leader>P "+P
 
 " Buffer navigation
-map <tab> <C-w><C-w>
 map <C-k> <C-w><Up>
 map <C-j> <C-w><Down>
 map <C-l> <C-w><Right>
@@ -99,10 +108,8 @@ nnoremap <leader>lc :lclose<CR>
 " Shortcut to copy current file path
 nmap cp :let @" = expand("%")<cr><cr>
 
-" Source a global configuration file if available
-if filereadable("/etc/vim/vimrc.local")
-  source /etc/vim/vimrc.local
-endif
+" Run Python tests in the current file
+map <leader>t :!pytest % -v<cr>
 
 " Vimgrep customization
 " opens search results in a window w/ links and highlight the matches
@@ -158,7 +165,7 @@ inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
 inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
 
 " Lightline settings
-set laststatus=2 " Show airline even if there is only one buffer
+set laststatus=2 " Show lightline even if there is only one buffer
 let g:lightline = {
             \ 'colorscheme': 'seoul256',
             \ 'component_function': {
@@ -182,6 +189,8 @@ nnoremap <leader>ff :FZF<cr>
 nnoremap <leader>ft :Tags<cr>
 nnoremap <leader>fa :Ag<cr>
 nnoremap <leader>fb :Buffers<cr>
+nnoremap <leader>fh :History<cr>
+nnoremap <leader>fg :GFiles?<cr>
 " Vimtex settings
 let g:vimtex_latexmk_continuous=1
 let g:vimtex_latexmk_options='-pdf -file-line-error -synctex=1 -interaction=nonstopmode -shell-escape'
