@@ -11,7 +11,7 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 " " let Vundle manage Vundle, required
 Plugin '907th/vim-auto-save'  " Replace this with simple config
-Plugin 'Valloric/YouCompleteMe'
+Plugin 'maralla/completor.vim'
 Plugin 'python-mode/python-mode'
 Plugin 'itchyny/lightline.vim'
 Plugin 'tpope/vim-fugitive'
@@ -150,16 +150,12 @@ nmap <silent>pl <C-j> <Plug>(ale_next_wrap)
 nmap <Leader>nh <Plug>GitGutterNextHunk
 nmap <Leader>ph <Plug>GitGutterPrevHunk
 
-" YouCompleteMe settings
-let g:clang_user_options='|| exit 0'
-let g:ycm_add_preview_to_completeopt=1
-let g:ycm_autoclose_preview_window_after_completion=1
-let g:ycm_min_num_of_chars_for_completion=2
-let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_python_binary_path = '/usr/bin/python2'
-nnoremap <leader>jd :YcmCompleter GoToDeclaration<CR>
-nnoremap <leader>jf :YcmCompleter GoToDefinition<CR>
-noremap pumvisible() ? "\" : " "
+" Completer settings
+let g:completor_python_binary = '/usr/bin/python'
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
+inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
 
 " Lightline settings
 set laststatus=2 " Show airline even if there is only one buffer
