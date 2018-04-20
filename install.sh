@@ -6,7 +6,7 @@
 ########## Variables
 dir=~/dotfiles                    # dotfiles directory
 olddir=~/dotfiles_old             # old dotfiles backup directory
-files="vimrc vim fonts gitconfig gitignore git_template ctags isort.cfg pylintrc bashrc"    # list of files/folders to symlink in homedir
+files="vimrc vim fonts gitconfig gitignore git_template ctags isort.cfg pylintrc bashrc zshrc"    # list of files/folders to symlink in homedir
 ##########
 
 # create dotfiles_old in homedir
@@ -19,7 +19,7 @@ echo "Changing to the $dir directory"
 cd $dir
 echo "...done"
 
-# move any existing dotfiles in homedir to dotfiles_old directory, then create symlinks 
+# move any existing dotfiles in homedir to dotfiles_old directory, then create symlinks
 for file in $files; do
     echo $file
     if [[ -f ~/.$file || -d ~/.$file ]] && [ ! -L ~./$file ]; then
