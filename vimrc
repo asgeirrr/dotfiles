@@ -118,13 +118,13 @@ map <leader>t :!pytest % -v<cr>
 if executable('ag')
   " Use ag over grep
   set grepprg=ag\ --nogroup\ --nocolor
-  :nmap <leader>g :grep "\b<C-R><C-W>\b"<CR>:cw<CR>
+  :nmap <leader>g :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
   " Prepare Ag command to be mapped to a convenience key
-  command -nargs=+ -complete=file -bar Ag silent! grep! "<args>" -S|cwindow|redraw!
+  command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
   map Ag to \
   nnoremap \ :Ag<SPACE>
 else
-  command! -nargs=+ Grep execute 'silent grep! -I -r -n --exclude *.{css,json,js} --exclude-dir .git --exclude-dir migrations --exclude-dir bower_components --exclude-dir node_modules --exclude-dir data --exclude-dir static --exclude-dir  media --exclude-dir out . -e <args>' | copen | execute 'silent /<args>' | execute ':redraw!'  
+  command! -nargs=+ Grep execute 'silent grep! -I -r -n --exclude *.{css,json,js} --exclude-dir .git --exclude-dir migrations --exclude-dir bower_components --exclude-dir node_modules --exclude-dir data --exclude-dir static --exclude-dir  media --exclude-dir out . -e <args>' | copen | execute 'silent /<args>' | execute ':redraw!'
   " leader-G Greps for the word under the cursor
   :nmap <leader>g :Grep <c-r>=expand("<cword>")<cr><cr>
 endif
