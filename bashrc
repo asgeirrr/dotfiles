@@ -45,4 +45,7 @@ export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2.7
 export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv2
 export WORKON_HOME=~/.virtualenvs
 source /usr/bin/virtualenvwrapper.sh
+
 export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
+
+export PYTHONPATH=:$PYTHONPATH # To enable running sk-research scripts from the repository root
