@@ -16,6 +16,7 @@
     ctags = !.git/hooks/ctags
     please = push --force-with-lease
     recent = for-each-ref --sort=committerdate refs/heads/ --format='%(refname:short)'
+    irebase = !git rebase -i $(git merge-base HEAD origin/master)
 [core]
     editor = vim
     excludesfile = ~/.gitignore
