@@ -1,2 +1,4 @@
 *.swp
 env
+*.mypy_cache
+*.pytest_cache
