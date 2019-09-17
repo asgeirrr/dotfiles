@@ -31,6 +31,9 @@ Plugin 'lervag/vimtex'
 Plugin 'w0rp/ale'
 Plugin '/usr/local/opt/fzf'
 Plugin 'junegunn/fzf.vim'
+Plugin 'wimstefan/vim-artesanal'
+Plugin 'tpope/vim-surround'
+
 
 call vundle#end() " all of your Plugins must be added before the following line
 " " Brief help
@@ -44,6 +47,9 @@ call vundle#end() " all of your Plugins must be added before the following line
 filetype plugin indent on
 syntax on
 
+" Enable syntax highlighting on weird file types
+autocmd BufNewFile,BufRead *.geojson set syntax=json
+
 " GENERAL VIM SETTINGS
 set showmatch	           " Show matching brackets.
 set ignorecase	           " Do case insensitive matching
@@ -54,8 +60,7 @@ set mouse=a	           " Enable mouse usage (all modes)
 set encoding=utf-8
 set clipboard+=unnamedplus " use the clipboards of vim and X
 set go+=a                  " Visual selection automatically copied to the clipboard
-set foldminlines=20        " Fold only long functions or classes
-set foldlevelstart=1       " Do not fold top-level function or classes
+set nofoldenable           " Do not fold top-level function or classes
 color luna-term            " luna-term for dark theme or lightning for a light theme
 set t_Co=256               " 256 colors of the terminal to support nicer themes
 set background=dark        " Should be turned on when using syntax highlighting on dark background
@@ -70,6 +75,9 @@ set path=**                " Search down in subfolders with tab completion for f
 set wildmenu               " Display all matching files/tags/commands/whatever when we tab complete
 set tags=.git/tags
 set number relativenumber
+
+" Make Python available in NeoVim
+let g:python_host_prog = 'python2'
 
 " Override comment colour
 hi Comment ctermfg=244
@@ -111,6 +119,11 @@ nmap cp :let @" = expand("%")<cr><cr>
 " Run Python tests in the current file
 map <leader>t :!pytest % -v<cr>
 
+" Git shortcuts
+map <leader>gb :terminal tig blame %<cr><cr>
+map <leader>gh :terminal tig --follow %<cr><cr>
+map <leader>h :terminal git log -L :<cword>:% \| tig <cr><cr>
+
 " Vimgrep customization
 " opens search results in a window w/ links and highlight the matches
 
@@ -118,28 +131,29 @@ map <leader>t :!pytest % -v<cr>
 if executable('ag')
   " Use ag over grep
   set grepprg=ag\ --nogroup\ --nocolor
+  set grepprg=ag\ --vimgrep\ --smart-case
   :nmap <leader>g :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
   " Prepare Ag command to be mapped to a convenience key
   command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
-  map Ag to \
   nnoremap \ :Ag<SPACE>
 else
   command! -nargs=+ Grep execute 'silent grep! -I -r -n --exclude *.{css,json,js} --exclude-dir .git --exclude-dir migrations --exclude-dir bower_components --exclude-dir node_modules --exclude-dir data --exclude-dir static --exclude-dir  media --exclude-dir out . -e <args>' | copen | execute 'silent /<args>' | execute ':redraw!'
   " leader-G Greps for the word under the cursor
-  :nmap <leader>g :Grep <c-r>=expand("<cword>")<cr><cr>
+  :nmap <leader>g :Grep <cword> *<cr>
 endif
 
 " PLUGIN SETTINGS
 let g:auto_save = 1  " enable AutoSave on Vim startup
 let g:auto_save_in_insert_mode = 0  " do not save while in insert mode
 
-let g:instant_markdown_autostart = 1
+let g:instant_markdown_autostart = 0
 
 let g:gitgutter_max_signs = 1000
+autocmd BufWritePost * GitGutter  " update signs on save
 
 let g:rainbow_active = 1
 
-let g:vim_isort_python_version = 'python3'
+" autocmd BufWritePre *.py :Isort
 
 " Pymode settings
 let g:pymode_lint = 0  " Disable to use linting from ALE
@@ -148,10 +162,12 @@ let g:pymode_indent = 1
 let g:pymode_folding = 0
 let g:pymode_motion = 1
 let g:pymode_rope = 0
+let g:pymode_motion = 0
 
 " ALE linter settings
 nmap <Leader>nl <C-k> <Plug>(ale_previous_wrap)
 nmap <silent>pl <C-j> <Plug>(ale_next_wrap)
+let g:ale_linters = {'python': ['pylint', 'mypy']}
 
 "Git Gutter settings
 nmap <Leader>nh <Plug>GitGutterNextHunk
@@ -159,10 +175,13 @@ nmap <Leader>ph <Plug>GitGutterPrevHunk
 
 " Completer settings
 let g:completor_python_binary = '/usr/bin/python'
+let g:completor_racer_binary = '~/.cargo/bin/racer'
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
 inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
+" Show doc string for the word under cursor (capital K)
+noremap <s-k> :call completor#do('doc')<CR>
 
 " Lightline settings
 set laststatus=2 " Show lightline even if there is only one buffer
@@ -188,15 +207,24 @@ map <leader>nf :NERDTreeFind<cr>
 nnoremap <leader>ff :FZF<cr>
 nnoremap <leader>ft :Tags<cr>
 nnoremap <leader>fa :Ag<cr>
-nnoremap <leader>fb :Buffers<cr>
 nnoremap <leader>fh :History<cr>
 nnoremap <leader>fg :GFiles?<cr>
+nnoremap <leader>fc :Commits<cr>
+nnoremap <leader>fb :BCommits<cr>
+let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" --no-merges'
+nnoremap <C-]> :call fzf#vim#tags('^' . expand('<cword>'), {'options': '--exact --select-1 --exit-0 +i'})<CR>
+
 " Vimtex settings
 let g:vimtex_latexmk_continuous=1
 let g:vimtex_latexmk_options='-pdf -file-line-error -synctex=1 -interaction=nonstopmode -shell-escape'
 
 " Automatically update copyright notice with current year
-autocmd BufWritePre *
+autocmd BufWritePre *.py
   \ if &modified |
   \   exe "g#\\cCOPYRIGHT \(C\) \\(".strftime("%Y")."\\)\\@![0-9]\\{4\\}\\(-".strftime("%Y")."\\)\\@!#s#\\([0-9]\\{4\\}\\)\\(-[0-9]\\{4\\}\\)\\?#\\1-".strftime("%Y") |
   \ endif
+
+" Neovim settings
+if has('nvim')
+    autocmd TermOpen term://* startinsert
+endif
