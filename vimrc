@@ -228,3 +228,6 @@ autocmd BufWritePre *.py
 if has('nvim')
     autocmd TermOpen term://* startinsert
 endif
+
+" Abbreviations
+ab flexmock( flexmock() \<CR>.should_receive() \<CR>.with_args() \<CR>.and_return() \<CR>.once()<esc>4k2h
