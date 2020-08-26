@@ -17,6 +17,11 @@
     please = push --force-with-lease
     recent = "!git co $(git for-each-ref --sort=committerdate refs/heads/ --format='%(refname:short)' | tac | fzf)"
     irebase = !git rebase -i $(git merge-base HEAD origin/master) --autostash --autosquash
+    files = !git diff --name-only $(git merge-base HEAD HEAD~1)
+    # Open all files changed since REVIEW_BASE in Vim tabs
+    # Then, run fugitive's :Gdiff in each tab, and finally
+    # tell vim-gitgutter to show +/- for changes since REVIEW_BASE
+    review = !nvim -p $(git files) +\"tabdo Gdiff HEAD~1\" +\"let g:gitgutter_diff_base = 'HEAD~1'\"
 [core]
     editor = vim
     excludesfile = ~/.gitignore
