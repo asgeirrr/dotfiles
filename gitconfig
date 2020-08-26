@@ -15,7 +15,7 @@
     st = status
     ctags = !.git/hooks/ctags
     please = push --force-with-lease
-    recent = for-each-ref --sort=committerdate refs/heads/ --format='%(refname:short)'
+    recent = "!git co $(git for-each-ref --sort=committerdate refs/heads/ --format='%(refname:short)' | tac | fzf)"
     irebase = !git rebase -i $(git merge-base HEAD origin/master) --autostash --autosquash
 [core]
     editor = vim
