@@ -42,3 +42,8 @@
     smudge = git-lfs smudge -- %f
     process = git-lfs filter-process
     required = true
+[tig]
+    ignore-case = smart-case
+[tig "bind"]
+    diff = g move-first-line
+    diff = G move-last-line
