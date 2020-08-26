@@ -144,7 +144,6 @@ endif
 
 " PLUGIN SETTINGS
 let g:auto_save = 1  " enable AutoSave on Vim startup
-let g:auto_save_in_insert_mode = 0  " do not save while in insert mode
 
 let g:instant_markdown_autostart = 0
 
@@ -165,13 +164,13 @@ let g:pymode_rope = 0
 let g:pymode_motion = 0
 
 " ALE linter settings
-nmap <Leader>nl <C-k> <Plug>(ale_previous_wrap)
-nmap <silent>pl <C-j> <Plug>(ale_next_wrap)
+nmap <Leader>pl <C-k> <Plug>(ale_previous_wrap)
+nmap <silent>nl <C-j> <Plug>(ale_next_wrap)
 let g:ale_linters = {'python': ['pylint', 'mypy']}
 
 "Git Gutter settings
-nmap <Leader>nh <Plug>GitGutterNextHunk
-nmap <Leader>ph <Plug>GitGutterPrevHunk
+nmap <Leader>nh <Plug>(GitGutterNextHunk)
+nmap <Leader>ph <Plug>(GitGutterPrevHunk)
 
 " Completer settings
 let g:completor_python_binary = '/usr/bin/python'
@@ -215,6 +214,7 @@ let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %
 nnoremap <C-]> :call fzf#vim#tags('^' . expand('<cword>'), {'options': '--exact --select-1 --exit-0 +i'})<CR>
 
 " Vimtex settings
+let g:tex_flavor = 'latex'
 let g:vimtex_latexmk_continuous=1
 let g:vimtex_latexmk_options='-pdf -file-line-error -synctex=1 -interaction=nonstopmode -shell-escape'
 
