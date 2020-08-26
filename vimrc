@@ -114,7 +114,7 @@ nnoremap <leader>lo :lopen<CR>
 nnoremap <leader>lc :lclose<CR>
 
 " Shortcut to copy current file path
-nmap cp :let @" = expand("%")<cr><cr>
+nmap cp :let @+ = expand("%")<cr><cr>
 
 " Run Python tests in the current file
 map <leader>t :!pytest % -v<cr>
