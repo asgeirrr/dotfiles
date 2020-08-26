@@ -9,11 +9,11 @@ bindkey -v
 export KEYTIMEOUT=1 # Faster switch to normal vi mode
 
 # Plugins
-autoload -Uz compinit && compinit
-autoload -Uz promptinit && promptinit
 autoload -U colors && colors
 autoload edit-command-line
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+autoload -U +X bashcompinit && bashcompinit
+autoload -U +X compinit && compinit
 
 # PROMPT SETTINGS
 PROMPT='%F{blue}%~ %B>%b %f'
@@ -42,7 +42,9 @@ zle     -N   fzf-history-widget
 bindkey -M vicmd '/' fzf-history-widget
 
 # Aliases
-alias ll='ls -l --color'
+alias ll='ls -lh --color'
+alias ykcode='ykman oath code $(ykman oath list | fzf)'
+alias hubi='hub issue show $(hub issue | fzf | cut -c 5- | cut -d " " -f1)'
 ##################################################
 # Virtualenvwrapper
 
@@ -69,7 +71,12 @@ export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
 
 export PYTHONPATH=$PYTHONPATH:~/Projekty/sk-backend/python
 export MYPYPATH=$MYPYPATH:~/Projekty/sk-backend/python
+export SPACEKNOW_CLOUD=gcloud
 export SPACEKNOW_PLATFORM=devel
 
 export SSH_ASKPASS=ksshaskpass
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+
+# Completions
+source <(kubectl completion zsh)
+
