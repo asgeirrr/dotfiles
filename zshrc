@@ -55,13 +55,8 @@ PATH=$PATH:/usr/share/git/diff-highlight/
 PATH=$PATH:~/Projekty/sk-backend/devtools:~/Projekty/sk-backend/scripts:~/Projekty/sk-backend/deliveries
 PATH=$PATH:/home/oskar/.cargo/bin
 
-# SSH Agent
-if ! pgrep -u "$USER" ssh-agent > /dev/null; then
-    ssh-agent > ~/.ssh-agent-thing
-fi
-if [[ "$SSH_AGENT_PID" == "" ]]; then
-    eval "$(<~/.ssh-agent-thing)"
-fi
+# Use GPG as SSH Agent
+SSH_AUTH_SOCK=/run/user/1000/gnupg/S.gpg-agent.ssh;
 ##################################################
 # Virtualenvwrapper
 export WORKON_HOME=~/.virtualenvs
@@ -74,9 +69,5 @@ export MYPYPATH=$MYPYPATH:~/Projekty/sk-backend/python
 export SPACEKNOW_CLOUD=gcloud
 export SPACEKNOW_PLATFORM=devel
 
-export SSH_ASKPASS=ksshaskpass
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
-
 # Completions
 source <(kubectl completion zsh)
-
