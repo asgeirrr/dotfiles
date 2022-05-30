@@ -23,13 +23,11 @@ Plugin 'kylef/apiblueprint.vim'
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'virtualenv.vim'
 Plugin 'vim-scripts/django.vim'
-Plugin 'fisadev/vim-isort'
 Plugin 'luochen1990/rainbow'
 Plugin 'notpratheek/vim-luna'
 Plugin 'wimstefan/Lightning'
 Plugin 'lervag/vimtex'
 Plugin 'w0rp/ale'
-Plugin '/usr/local/opt/fzf'
 Plugin 'junegunn/fzf.vim'
 Plugin 'wimstefan/vim-artesanal'
 Plugin 'tpope/vim-surround'
@@ -77,7 +75,7 @@ set tags=.git/tags
 set number relativenumber
 
 " Make Python available in NeoVim
-let g:python_host_prog = 'python2'
+let g:python_host_prog = 'python3'
 
 " Override comment colour
 hi Comment ctermfg=244
@@ -106,6 +104,7 @@ map <C-j> <C-w><Down>
 map <C-l> <C-w><Right>
 map <C-h> <C-w><Left>
 nnoremap nt :tabnew<CR>
+tnoremap <C-o> <C-\><C-n>
 
 " Quickfix navigation
 nnoremap <leader>ln :lnext<CR>
@@ -117,12 +116,20 @@ nnoremap <leader>lc :lclose<CR>
 nmap cp :let @+ = expand("%")<cr><cr>
 
 " Run Python tests in the current file
-map <leader>t :!pytest % -v<cr>
+map <leader>t :!pytest % -vv<cr>
+
+" Run Python tests in the current file
+map <leader>k :!black %<cr>
+
+" Run Cargo
+map <leader>r :!RUST_BACKTRACE=1 cargo run<cr>
 
 " Git shortcuts
 map <leader>gb :terminal tig blame %<cr><cr>
 map <leader>gh :terminal tig --follow %<cr><cr>
-map <leader>h :terminal git log -L :<cword>:% \| tig <cr><cr>
+
+" Python dicts to JSON
+map <leader>j :%s/'/"/g <bar> :%s/None/null/g <bar> :%s/True/true/g <bar> :%s/False/false/g <cr><cr>
 
 " Vimgrep customization
 " opens search results in a window w/ links and highlight the matches
@@ -152,11 +159,9 @@ autocmd BufWritePost * GitGutter  " update signs on save
 
 let g:rainbow_active = 1
 
-" autocmd BufWritePre *.py :Isort
-
 " Pymode settings
 let g:pymode_lint = 0  " Disable to use linting from ALE
-let g:pymode_options_max_line_length = 79
+let g:pymode_options_max_line_length = 99
 let g:pymode_indent = 1
 let g:pymode_folding = 0
 let g:pymode_motion = 1
@@ -167,10 +172,12 @@ let g:pymode_motion = 0
 nmap <Leader>pl <C-k> <Plug>(ale_previous_wrap)
 nmap <silent>nl <C-j> <Plug>(ale_next_wrap)
 let g:ale_linters = {'python': ['pylint', 'mypy']}
+let g:ale_fixers = ['isort']
+let g:ale_fix_on_save = 1
 
 "Git Gutter settings
-nmap <Leader>nh <Plug>(GitGutterNextHunk)
-nmap <Leader>ph <Plug>(GitGutterPrevHunk)
+nmap <Leader>hn <Plug>(GitGutterNextHunk)
+nmap <Leader>hp <Plug>(GitGutterPrevHunk)
 
 " Completer settings
 let g:completor_python_binary = '/usr/bin/python'
@@ -199,17 +206,18 @@ endfunction
 " NERDTree settings
 let NERDTreeDirArrows=0 " Fixes weird symbols in the tree
 let NERDTreeIgnore = ['\.pyc$', '__pycache__$'] " Do not show these files in the tree
-nmap <leader>ne :NERDTree<cr>
-map <leader>nf :NERDTreeFind<cr>
+nmap <leader>fe :NERDTree<cr>
+map <leader>fs :NERDTreeFind<cr>
 
 " FZF settings
+let g:fzf_layout = { 'down': '~40%' }
 nnoremap <leader>ff :FZF<cr>
 nnoremap <leader>ft :Tags<cr>
 nnoremap <leader>fa :Ag<cr>
 nnoremap <leader>fh :History<cr>
 nnoremap <leader>fg :GFiles?<cr>
-nnoremap <leader>fc :Commits<cr>
-nnoremap <leader>fb :BCommits<cr>
+nnoremap <leader>fc :History:<cr>
+nnoremap <leader>fb :BTags<cr>
 let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" --no-merges'
 nnoremap <C-]> :call fzf#vim#tags('^' . expand('<cword>'), {'options': '--exact --select-1 --exit-0 +i'})<CR>
 
