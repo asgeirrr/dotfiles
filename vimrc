@@ -15,6 +15,7 @@ Plugin 'maralla/completor.vim'
 Plugin 'python-mode/python-mode'
 Plugin 'itchyny/lightline.vim'
 Plugin 'tpope/vim-fugitive'
+Plugin 'shumphrey/fugitive-gitlab.vim'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'  " Replace this with simple command
@@ -26,6 +27,7 @@ Plugin 'vim-scripts/django.vim'
 Plugin 'luochen1990/rainbow'
 Plugin 'notpratheek/vim-luna'
 Plugin 'wimstefan/Lightning'
+Plugin 'NLKNguyen/papercolor-theme'
 Plugin 'lervag/vimtex'
 Plugin 'w0rp/ale'
 Plugin 'junegunn/fzf.vim'
@@ -135,14 +137,13 @@ map <leader>j :%s/'/"/g <bar> :%s/None/null/g <bar> :%s/True/true/g <bar> :%s/Fa
 " opens search results in a window w/ links and highlight the matches
 
 " Use The Silver Searcher if available and fallback to Grep otherwise
-if executable('ag')
-  " Use ag over grep
-  set grepprg=ag\ --nogroup\ --nocolor
-  set grepprg=ag\ --vimgrep\ --smart-case
-  :nmap <leader>g :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
-  " Prepare Ag command to be mapped to a convenience key
-  command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
-  nnoremap \ :Ag<SPACE>
+if executable('rg')
+  " Use rg over grep
+  set grepprg=rg\ --vimgrep\ --smart-case\ --hidden\ --glob\ '!.git/**'
+  :nmap <leader>g :grep! "\b<C-R><C-W>\b"<CR>:cw<CR><CR>
+  " Prepare rg command to be mapped to a convenience key
+  command -nargs=+ -complete=file -bar Rg silent! grep! <args>|cwindow|redraw!
+  nnoremap \ :Rg<SPACE>
 else
   command! -nargs=+ Grep execute 'silent grep! -I -r -n --exclude *.{css,json,js} --exclude-dir .git --exclude-dir migrations --exclude-dir bower_components --exclude-dir node_modules --exclude-dir data --exclude-dir static --exclude-dir  media --exclude-dir out . -e <args>' | copen | execute 'silent /<args>' | execute ':redraw!'
   " leader-G Greps for the word under the cursor
@@ -156,6 +157,8 @@ let g:instant_markdown_autostart = 0
 
 let g:gitgutter_max_signs = 1000
 autocmd BufWritePost * GitGutter  " update signs on save
+
+let g:fugitive_gitlab_domains = ['https://gitlab.rossum.cloud']
 
 let g:rainbow_active = 1
 
@@ -172,7 +175,7 @@ let g:pymode_motion = 0
 nmap <Leader>pl <C-k> <Plug>(ale_previous_wrap)
 nmap <silent>nl <C-j> <Plug>(ale_next_wrap)
 let g:ale_linters = {'python': ['pylint', 'mypy']}
-let g:ale_fixers = ['isort']
+let g:ale_fixers = {'python': ['black', 'isort']}
 let g:ale_fix_on_save = 1
 
 "Git Gutter settings
