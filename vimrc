@@ -229,12 +229,6 @@ let g:tex_flavor = 'latex'
 let g:vimtex_latexmk_continuous=1
 let g:vimtex_latexmk_options='-pdf -file-line-error -synctex=1 -interaction=nonstopmode -shell-escape'
 
-" Automatically update copyright notice with current year
-autocmd BufWritePre *.py
-  \ if &modified |
-  \   exe "g#\\cCOPYRIGHT \(C\) \\(".strftime("%Y")."\\)\\@![0-9]\\{4\\}\\(-".strftime("%Y")."\\)\\@!#s#\\([0-9]\\{4\\}\\)\\(-[0-9]\\{4\\}\\)\\?#\\1-".strftime("%Y") |
-  \ endif
-
 " Neovim settings
 if has('nvim')
     autocmd TermOpen term://* startinsert
