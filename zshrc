@@ -48,15 +48,14 @@ zle     -N   fzf-history-widget
 bindkey -M vicmd '/' fzf-history-widget
 
 # Aliases
-alias ll='ls -lh --color'
-alias ykcode='ykman oath accounts code $(ykman oath list | fzf)'
+alias ll='ls -lh --color' 
+alias ykcode='ykman oath accounts code $(ykman oath accounts list | fzf)'
 alias hubi='hub issue show $(hub issue | fzf | cut -c 5- | cut -d " " -f1)'
 alias dexec='docker exec -it $(docker ps | tail -n +2 | sed "s/[[:space:]]\+/:/g" | cut -d":" -f1,2 | fzf | cut -d ":" -f1) bash'
 alias car='conda activate rir'
 alias dcp='docker compose'
 alias switchcards='rm ~/.gnupg/private-keys-v1.d/BBCCC06A5324A6E6680E7D9AEDBB675A44FB56F8.key ~/.gnupg/private-keys-v1.d/6F78487DCDF7664CB19CA1F336A2DDB1AA898DEF.key ~/.gnupg/private-keys-v1.d/9DA10D269C50F2F761FA5AD8053E87E073FB20A3.key && gpg --card-status'
-##################################################
-# Virtualenvwrapper
+alias vim="nvim"
 
 # ENV SETTINGS
 export VISUAL="nvim"
@@ -69,10 +68,6 @@ PATH=$PATH:/home/oskar/.cargo/bin
 export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 gpgconf --launch gpg-agent
 export GPG_TTY=$(tty)
-##################################################
-# Virtualenvwrapper
-export WORKON_HOME=~/.virtualenvs
-source /usr/bin/virtualenvwrapper.sh
 
 export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
 

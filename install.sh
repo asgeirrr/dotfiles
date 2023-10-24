@@ -42,8 +42,10 @@ for file in $cp_files; do
     cp $file ~/.$file
     chmod 600 ~/.$file
 done
-# Create symbolic link to be able to call diff-highlight when git diff
-sudo ln /usr/share/git-core/contrib/diff-highlight /usr/bin/diff-highlight
 
 # Use NeoVim instead of Vim
 sudo ln -s /usr/bin/nvim /usr/bin/vim
+ln -s ~/.vimrc ~/.config/nvim/init.vim
+
+# Install Vundle for NeoVim
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.config/nvim/bundle/Vundle.vim
