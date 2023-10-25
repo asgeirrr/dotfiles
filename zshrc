@@ -54,6 +54,7 @@ alias hubi='hub issue show $(hub issue | fzf | cut -c 5- | cut -d " " -f1)'
 alias dexec='docker exec -it $(docker ps | tail -n +2 | sed "s/[[:space:]]\+/:/g" | cut -d":" -f1,2 | fzf | cut -d ":" -f1) bash'
 alias car='conda activate rir'
 alias dcp='docker compose'
+alias pcp='podman compose'
 alias switchcards='rm ~/.gnupg/private-keys-v1.d/BBCCC06A5324A6E6680E7D9AEDBB675A44FB56F8.key ~/.gnupg/private-keys-v1.d/6F78487DCDF7664CB19CA1F336A2DDB1AA898DEF.key ~/.gnupg/private-keys-v1.d/9DA10D269C50F2F761FA5AD8053E87E073FB20A3.key && gpg --card-status'
 alias vim="nvim"
 
@@ -63,6 +64,7 @@ export EDITOR="nvim"
 PATH=$PATH:/usr/share/git/diff-highlight/
 PATH=$PATH:~/Projekty/sk-backend/devtools:~/Projekty/sk-backend/scripts:~/Projekty/sk-backend/deliveries
 PATH=$PATH:/home/oskar/.cargo/bin
+export BUILDAH_FORMAT=docker # Make podman work with docker-style Dockerfiles
 
 # Use GPG as SSH Agent
 export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)

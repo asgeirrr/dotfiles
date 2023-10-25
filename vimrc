@@ -216,7 +216,7 @@ map <leader>fs :NERDTreeFind<cr>
 let g:fzf_layout = { 'down': '~40%' }
 nnoremap <leader>ff :FZF<cr>
 nnoremap <leader>ft :Tags<cr>
-nnoremap <leader>fa :Ag<cr>
+nnoremap <leader>fa :Rg<cr>
 nnoremap <leader>fh :History<cr>
 nnoremap <leader>fg :GFiles?<cr>
 nnoremap <leader>fc :History:<cr>
