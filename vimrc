@@ -11,7 +11,6 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
 call vundle#begin()
 " " let Vundle manage Vundle, required
 Plugin '907th/vim-auto-save'  " Replace this with simple config
-Plugin 'maralla/completor.vim'
 Plugin 'python-mode/python-mode'
 Plugin 'itchyny/lightline.vim'
 Plugin 'tpope/vim-fugitive'
@@ -33,7 +32,7 @@ Plugin 'w0rp/ale'
 Plugin 'junegunn/fzf.vim'
 Plugin 'wimstefan/vim-artesanal'
 Plugin 'tpope/vim-surround'
-
+Plugin 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
 call vundle#end() " all of your Plugins must be added before the following line
 " " Brief help
@@ -175,16 +174,16 @@ let g:pymode_motion = 0
 nmap <Leader>pl <C-k> <Plug>(ale_previous_wrap)
 nmap <silent>nl <C-j> <Plug>(ale_next_wrap)
 let g:ale_linters = {'python': ['pylint', 'mypy']}
-let g:ale_fixers = {'python': ['black', 'isort']}
+let g:ale_fixers = {'python': ['black']}
 let g:ale_fix_on_save = 1
+let g:ale_python_black_options='--line-length=99'
 
 "Git Gutter settings
 nmap <Leader>hn <Plug>(GitGutterNextHunk)
 nmap <Leader>hp <Plug>(GitGutterPrevHunk)
 
 " Completer settings
-let g:completor_python_binary = '/usr/bin/python'
-let g:completor_racer_binary = '~/.cargo/bin/racer'
+let g:deoplete#enable_at_startup = 1
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"

@@ -64,7 +64,14 @@ export EDITOR="nvim"
 PATH=$PATH:/usr/share/git/diff-highlight/
 PATH=$PATH:~/Projekty/sk-backend/devtools:~/Projekty/sk-backend/scripts:~/Projekty/sk-backend/deliveries
 PATH=$PATH:/home/oskar/.cargo/bin
+
+PATH=$PATH:/home/oskar/.local/share/gem/ruby/3.0.0/bin
+export GEM_HOME="$(gem env user_gemhome)"
+export PATH="$PATH:$GEM_HOME/bin"
+
 export BUILDAH_FORMAT=docker # Make podman work with docker-style Dockerfiles
+export DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock # Enable rootless use of podman as docker
+export MORGAN_CACHE_DIR=/tmp/morgan-cache
 
 # Use GPG as SSH Agent
 export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
