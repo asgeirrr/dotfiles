@@ -57,3 +57,5 @@
     side-by-side = true
 [diff]
     colorMoved = default
+[diff.lfs]
+    textconv=cat
