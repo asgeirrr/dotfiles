@@ -48,7 +48,7 @@ zle     -N   fzf-history-widget
 bindkey -M vicmd '/' fzf-history-widget
 
 # Aliases
-alias ll='ls -lh --color' 
+alias ll='exa --long --all' 
 alias ykcode='ykman oath accounts code $(ykman oath accounts list | fzf)'
 alias hubi='hub issue show $(hub issue | fzf | cut -c 5- | cut -d " " -f1)'
 alias dexec='docker exec -it $(docker ps | tail -n +2 | sed "s/[[:space:]]\+/:/g" | cut -d":" -f1,2 | fzf | cut -d ":" -f1) bash'
@@ -119,3 +119,6 @@ fi
 
 # Wayland
 export MOZ_ENABLE_WAYLAND=1
+
+# Faster command line prompt
+eval "$(starship init zsh)"
