@@ -3,6 +3,7 @@ HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
 setopt INC_APPEND_HISTORY_TIME # Commands are written to hist file right away
+setopt COMBINING_CHARS
 
 # Fine-tune vi mode
 bindkey -v
@@ -52,7 +53,7 @@ alias ll='exa --long --all'
 alias ykcode='ykman oath accounts code $(ykman oath accounts list | fzf)'
 alias hubi='hub issue show $(hub issue | fzf | cut -c 5- | cut -d " " -f1)'
 alias dexec='docker exec -it $(docker ps | tail -n +2 | sed "s/[[:space:]]\+/:/g" | cut -d":" -f1,2 | fzf | cut -d ":" -f1) bash'
-alias car='conda activate rir'
+alias car='micromamba activate rir'
 alias dcp='docker compose'
 alias pcp='podman compose'
 alias switchcards='rm ~/.gnupg/private-keys-v1.d/BBCCC06A5324A6E6680E7D9AEDBB675A44FB56F8.key ~/.gnupg/private-keys-v1.d/6F78487DCDF7664CB19CA1F336A2DDB1AA898DEF.key ~/.gnupg/private-keys-v1.d/9DA10D269C50F2F761FA5AD8053E87E073FB20A3.key && gpg --card-status'
@@ -95,21 +96,6 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 export DOCKER_BUILDKIT=1
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/usr/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/usr/etc/profile.d/conda.sh" ]; then
-        . "/usr/etc/profile.d/conda.sh"
-    else
-        export PATH="/usr/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
 # r8-utils
 export R8TEAM=rir
 export R8PATH=/home/oskar/.rossum
@@ -122,3 +108,16 @@ export MOZ_ENABLE_WAYLAND=1
 
 # Faster command line prompt
 eval "$(starship init zsh)"
+
+# >>> mamba initialize >>>
+# !! Contents within this block are managed by 'mamba init' !!
+export MAMBA_EXE='/usr/bin/micromamba';
+export MAMBA_ROOT_PREFIX='/home/oskar/.conda';
+__mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --root-prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__mamba_setup"
+else
+    alias micromamba="$MAMBA_EXE"  # Fallback on help from mamba activate
+fi
+unset __mamba_setup
+# <<< mamba initialize <<<
