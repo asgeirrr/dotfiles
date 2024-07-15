@@ -11,6 +11,7 @@ set rtp+=~/.config/nvim/bundle/Vundle.vim
 call vundle#begin()
 " " let Vundle manage Vundle, required
 Plugin '907th/vim-auto-save'  " Replace this with simple config
+Plugin 'maralla/completor.vim'
 Plugin 'python-mode/python-mode'
 Plugin 'itchyny/lightline.vim'
 Plugin 'tpope/vim-fugitive'
@@ -24,7 +25,7 @@ Plugin 'editorconfig/editorconfig-vim'
 Plugin 'virtualenv.vim'
 Plugin 'vim-scripts/django.vim'
 Plugin 'luochen1990/rainbow'
-Plugin 'notpratheek/vim-luna'
+Plugin 'rebelot/kanagawa.nvim'
 Plugin 'wimstefan/Lightning'
 Plugin 'NLKNguyen/papercolor-theme'
 Plugin 'lervag/vimtex'
@@ -32,7 +33,8 @@ Plugin 'w0rp/ale'
 Plugin 'junegunn/fzf.vim'
 Plugin 'wimstefan/vim-artesanal'
 Plugin 'tpope/vim-surround'
-Plugin 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plugin 'hashivim/vim-terraform'
+Plugin 'sainnhe/sonokai'
 
 call vundle#end() " all of your Plugins must be added before the following line
 " " Brief help
@@ -60,7 +62,7 @@ set encoding=utf-8
 set clipboard+=unnamedplus " use the clipboards of vim and X
 set go+=a                  " Visual selection automatically copied to the clipboard
 set nofoldenable           " Do not fold top-level function or classes
-color luna-term            " luna-term for dark theme or lightning for a light theme
+color sonokai              " sonokai for dark theme or PaperColor for a light theme
 set t_Co=256               " 256 colors of the terminal to support nicer themes
 set background=dark        " Should be turned on when using syntax highlighting on dark background
 set number                 " Line numbers
@@ -173,10 +175,14 @@ let g:pymode_motion = 0
 " ALE linter settings
 nmap <Leader>pl <C-k> <Plug>(ale_previous_wrap)
 nmap <silent>nl <C-j> <Plug>(ale_next_wrap)
-let g:ale_linters = {'python': ['pylint', 'mypy']}
-let g:ale_fixers = {'python': ['black']}
+let g:ale_linters = {'python': ['mypy', 'ruff', 'pylsp']}
+let g:ale_fixers = {'python': ['ruff_format']}
 let g:ale_fix_on_save = 1
-let g:ale_python_black_options='--line-length=99'
+let g:ale_python_mypy_options = '--ignore-missing-imports'
+nnoremap <C-]> :ALEGoToDefinition <CR>
+" Uncomment to debug pylsp, need to install python-lsp-server not
+" python-language-server
+" let g:ale_python_pylsp_options = '-vv --log-file /tmp/pylsp.log'
 
 "Git Gutter settings
 nmap <Leader>hn <Plug>(GitGutterNextHunk)
@@ -194,7 +200,7 @@ noremap <s-k> :call completor#do('doc')<CR>
 " Lightline settings
 set laststatus=2 " Show lightline even if there is only one buffer
 let g:lightline = {
-            \ 'colorscheme': 'seoul256',
+            \ 'colorscheme': 'PaperColor',
             \ 'component_function': {
             \   'filename': 'FilenameForLightline'
             \ }
@@ -221,7 +227,8 @@ nnoremap <leader>fg :GFiles?<cr>
 nnoremap <leader>fc :History:<cr>
 nnoremap <leader>fb :BTags<cr>
 let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" --no-merges'
-nnoremap <C-]> :call fzf#vim#tags('^' . expand('<cword>'), {'options': '--exact --select-1 --exit-0 +i'})<CR>
+"Relying on ALE for jumping to definitions now
+"nnoremap <C-]> :call fzf#vim#tags('^' . expand('<cword>'), {'options': '--exact --select-1 --exit-0 +i'})<CR>
 
 " Vimtex settings
 let g:tex_flavor = 'latex'
