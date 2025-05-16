@@ -52,23 +52,28 @@ bindkey -M vicmd '/' fzf-history-widget
 alias ll='exa --long --all' 
 alias ykcode='ykman oath accounts code $(ykman oath accounts list | fzf)'
 alias hubi='hub issue show $(hub issue | fzf | cut -c 5- | cut -d " " -f1)'
-alias dexec='docker exec -it $(docker ps | tail -n +2 | sed "s/[[:space:]]\+/:/g" | cut -d":" -f1,2 | fzf | cut -d ":" -f1) bash'
-alias car='micromamba activate rir'
+alias dexec='dcp exec -it $(dcp ps --services | fzf) bash'
 alias dcp='docker compose'
 alias pcp='podman compose'
 alias switchcards='rm ~/.gnupg/private-keys-v1.d/BBCCC06A5324A6E6680E7D9AEDBB675A44FB56F8.key ~/.gnupg/private-keys-v1.d/6F78487DCDF7664CB19CA1F336A2DDB1AA898DEF.key ~/.gnupg/private-keys-v1.d/9DA10D269C50F2F761FA5AD8053E87E073FB20A3.key && gpg --card-status'
 alias vim="nvim"
+alias dbdrop='DB_SERVICE=$(dcp ps --services | rg postgres); DB_NAME=$(dcp exec $DB_SERVICE bash -c "psql -U postgres -c \"SELECT datname FROM pg_database;\"" | tail -n +3 | head -n -2 | fzf); dcp exec $DB_SERVICE bash -c "psql -U postgres -d $DB_NAME -c \"drop schema public cascade; create schema public;\""'
 
+function kubuild() {
+  CLUSTER="$(basename $(realpath ..))"
+  kustomize build $1 | fluxsubst /home/oskar/rossum/deployments/${AWS_PROFILE}/${CLUSTER_NAME}/manifests/flux-system/configmap-cluster-variables.yaml
+}
 # ENV SETTINGS
 export VISUAL="nvim"
 export EDITOR="nvim"
 PATH=$PATH:/usr/share/git/diff-highlight/
-PATH=$PATH:~/Projekty/sk-backend/devtools:~/Projekty/sk-backend/scripts:~/Projekty/sk-backend/deliveries
 PATH=$PATH:/home/oskar/.cargo/bin
 
 PATH=$PATH:/home/oskar/.local/share/gem/ruby/3.0.0/bin
 export GEM_HOME="$(gem env user_gemhome)"
 export PATH="$PATH:$GEM_HOME/bin"
+
+export PATH=$PATH:/home/oskar/go/bin
 
 export BUILDAH_FORMAT=docker # Make podman work with docker-style Dockerfiles
 export DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock # Enable rootless use of podman as docker
@@ -110,7 +115,7 @@ export MOZ_ENABLE_WAYLAND=1
 eval "$(starship init zsh)"
 
 # >>> mamba initialize >>>
-# !! Contents within this block are managed by 'mamba init' !!
+# !! Contents within this block are managed by 'micromamba shell init' !!
 export MAMBA_EXE='/usr/bin/micromamba';
 export MAMBA_ROOT_PREFIX='/home/oskar/.conda';
 __mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --root-prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
@@ -121,3 +126,5 @@ else
 fi
 unset __mamba_setup
 # <<< mamba initialize <<<
+
+alias car="micromamba activate rir"
