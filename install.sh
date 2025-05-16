@@ -45,11 +45,8 @@ done
 
 # Use NeoVim instead of Vim
 sudo ln -s /usr/bin/nvim /usr/bin/vim
-ln -s ~/.vimrc ~/.config/nvim/init.vim
+ln -s ~/dotfiles/nvim ~/.config/nvim
 
 # Link wezterm to non-standard path
 mkdir -p ~/.config/wezterm/
 ln -s $dir/wezterm.lua ~/.config/wezterm/wezterm.lua
-
-# Install Vundle for NeoVim
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.config/nvim/bundle/Vundle.vim
