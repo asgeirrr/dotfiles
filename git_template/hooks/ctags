@@ -1,7 +1,14 @@
 #!/bin/sh
 set -e
-echo $PATH
 dir="`git rev-parse --git-dir`"
-ctags --exclude=*.rst --exclude=*.json --tag-relative=yes -R -o "$dir/$$.tags" ./*
+root="$(git rev-parse --show-toplevel)"
+cd "$root" && ctags --exclude=*.rst --exclude=*.json --exclude=*.css --exclude=staticfiles --tag-relative=no -R -o "$dir/$$.tags" .
+if [ -f "tools/generate_resource_id_tags.py" ]; then
+    python tools/generate_resource_id_tags.py "$root" >> "$dir/$$.tags"
+    # Keep header lines at top, sort the rest
+    grep '^!_TAG_' "$dir/$$.tags" > "$dir/$$.tags.sorted"
+    grep -v '^!_TAG_' "$dir/$$.tags" | sort -u >> "$dir/$$.tags.sorted"
+    mv "$dir/$$.tags.sorted" "$dir/$$.tags"
+fi
 mv "$dir/$$.tags" "$dir/tags"
 echo "$dir/tags"

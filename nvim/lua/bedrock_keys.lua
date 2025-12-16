@@ -14,7 +14,8 @@ local M = {}
 
 function M.set_bedrock_keys(profile)
   profile = profile or 'rossum-dev'
-  local credentials = vim.system({ 'aws', 'configure', 'export-credentials', '--profile', profile }, { text = true }):wait()
+  local credentials = vim.system({ 'aws', 'configure', 'export-credentials', '--profile', profile }, { text = true })
+      :wait()
   if credentials.code ~= 0 then
     vim.notify(vim.trim(credentials.stderr), vim.log.levels.ERROR)
     return
@@ -34,6 +35,7 @@ function M.set_bedrock_keys(profile)
   }, ',')
   vim.env.BEDROCK_KEYS = bedrock_keys
   vim.notify(string.format('BEDROCK_KEYS set for profile %s in region %s', profile, region_text), vim.log.levels.INFO)
+  return cred_data
 end
 
 return M

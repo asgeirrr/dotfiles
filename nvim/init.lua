@@ -205,12 +205,17 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
--- Populate BEDROCK_KEYS fro avante.nvim
-
-local bedrock_keys = require 'bedrock_keys'
-vim.api.nvim_create_user_command('BedrockKeys', function()
-  bedrock_keys.set_bedrock_keys()
+-- Commands for switching light and dark themes
+vim.api.nvim_create_user_command('Light', function()
+  vim.opt.background = "light"
+  vim.cmd("colorscheme gruvbox")
 end, {})
+
+vim.api.nvim_create_user_command('Dark', function()
+  vim.opt.background = "dark"
+  vim.cmd("colorscheme sonokai")
+end, {})
+
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -240,6 +245,7 @@ vim.keymap.set('n', '<leader>ff', ':FzfLua files<CR>', { desc = 'Fuzzy search fi
 vim.keymap.set('n', '<leader>ft', ':FzfLua tags<CR>', { desc = 'Fuzzy search tags' })
 vim.keymap.set('n', '<leader>fs', ':FzfLua live_grep<CR>', { desc = 'Fuzzy live grep' })
 vim.keymap.set('n', '<leader>fg', ':FzfLua git_status<CR>', { desc = 'Fuzzy search modified Git files' })
+vim.keymap.set('n', '<leader>fc', ':FzfLua colorschemes<CR>', { desc = 'Fuzzy search available colorschemes' })
 
 -- Git keymaps
 vim.keymap.set('n', '<Leader>hn', ':Gitsigns nav_hunk next<CR>', { desc = 'Go to next hunk' })
@@ -298,6 +304,18 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+
+  {
+    'ellisonleao/gruvbox.nvim',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require("gruvbox").setup({
+        contrast = "hard", -- can be "hard", "soft" or empty string
+        transparent_mode = false,
+      })
+    end,
+  },
   {
     'sainnhe/sonokai',
     lazy = false,
@@ -310,7 +328,6 @@ require('lazy').setup({
       -- vim.cmd.colorscheme 'sonokai'
     end,
   },
-
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -360,7 +377,8 @@ require('lazy').setup({
   -- Then, because we use the `opts` key (recommended), the configuration runs
   -- after the plugin has been loaded as `require(MODULE).setup(opts)`.
 
-  { -- Useful plugin to show you pending keybinds.
+  -- Useful plugin to show you pending keybinds.
+  {
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
@@ -406,7 +424,7 @@ require('lazy').setup({
 
       -- Document existing key chains
       spec = {
-        { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
+        { '<leader>c', group = '[C]ode',     mode = { 'n', 'x' } },
         { '<leader>d', group = '[D]ocument' },
         { '<leader>r', group = '[R]ename' },
         { '<leader>s', group = '[S]earch' },
@@ -430,7 +448,7 @@ require('lazy').setup({
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     -- or if using mini.icons/mini.nvim
     -- dependencies = { "" },
-    opts = {},
+    opts = { ctags_file = ".git/tags", multiline = true },
   },
   -- LSP Plugins
   {
@@ -457,7 +475,10 @@ require('lazy').setup({
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
-      { 'j-hui/fidget.nvim', opts = {} },
+      {
+        'j-hui/fidget.nvim',
+        opts = {},
+      },
 
       -- Allows extra capabilities provided by nvim-cmp
       'hrsh7th/cmp-nvim-lsp',
@@ -894,13 +915,13 @@ require('lazy').setup({
             local search = MiniStatusline.section_searchcount { trunc_width = 75 }
 
             return MiniStatusline.combine_groups {
-              { hl = mode_hl, strings = { mode } },
+              { hl = mode_hl,                  strings = { mode } },
               '%<', -- Mark general truncate point
               { hl = 'MiniStatuslineFilename', strings = { filename } },
               '%=', -- End left alignment
-              { hl = 'MiniStatuslineDevinfo', strings = { git, diff, diagnostics, lsp } },
-              { hl = 'MiniStatuslineFileinfo', strings = { fileinfo } },
-              { hl = mode_hl, strings = { search, location } },
+              { hl = 'MiniStatuslineDevinfo',  strings = { git } },
+              { hl = 'MiniStatuslineFileinfo', strings = {} },
+              { hl = mode_hl,                  strings = { search, location } },
             }
           end,
         },
@@ -987,46 +1008,20 @@ require('lazy').setup({
     end,
   },
   {
-    'yetone/avante.nvim',
-    event = 'VeryLazy',
-    version = false, -- Never set this value to "*"! Never!
-    opts = {
-      -- add any opts here
-      -- for example
-      provider = 'bedrock',
-      bedrock = { model = 'us.anthropic.claude-3-7-sonnet-20250219-v1:0' },
-    },
-    -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-    build = 'make',
-    -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
-    behaviour = {
-      enable_claude_text_editor_tool_mode = true,
-    },
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter',
-      'stevearc/dressing.nvim',
-      'nvim-lua/plenary.nvim',
-      'MunifTanjim/nui.nvim',
-      {
-        -- Make sure to set this up properly if you have lazy=true
-        'MeanderingProgrammer/render-markdown.nvim',
-        opts = {
-          file_types = { 'markdown', 'Avante' },
-        },
-        ft = { 'markdown', 'Avante' },
-      },
-    },
+    "lervag/vimtex",
+    lazy = false, -- we don't want to lazy load VimTeX
+    -- tag = "v2.15", -- uncomment to pin to a specific release
+    init = function()
+      -- VimTeX configuration goes here, e.g.
+      vim.g.vimtex_view_general_viewer = "zathura"
+    end
   },
+  -- Amp Plugin
   {
-    'Exafunction/codeium.nvim',
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'hrsh7th/nvim-cmp',
-
-      config = function()
-        require('codeium').setup {}
-      end,
-    },
+    "sourcegraph/amp.nvim",
+    branch = "main",
+    lazy = false,
+    opts = { auto_start = true, log_level = "info" },
   },
 }, {
   ui = {
@@ -1054,34 +1049,40 @@ require('lazy').setup({
 -- vim: ts=2 sts=2 sw=2 et
 
 -- FZF setup
-require('fzf-lua').setup {}
+require('fzf-lua').setup({
+  tags = {
+    cwd = vim.fn.getcwd(),
+  }
+})
 
 -- Autocompletion & linting
-require('codeium').setup {}
 require('cmp').setup {
   sources = {
     { name = 'nvim_lsp' },
     { name = 'codeium' },
   },
 }
-require('lspconfig').pylsp.setup {}
+vim.lsp.config.pylsp = {}
+vim.lsp.enable('pylsp')
 
-require('lspconfig').ruff.setup {}
+vim.lsp.config.ruff = {}
+vim.lsp.enable('ruff')
 
 -- Autolint & autosave
+
 local save_and_format = function()
-  if vim.bo.modified then
-    vim.lsp.buf.format { async = true }
+  if vim.bo.modified and
+      vim.bo.buftype == '' and
+      vim.api.nvim_buf_get_name(0) ~= '' and
+      vim.bo.modifiable then
+    -- Format synchronously, then save
+    vim.lsp.buf.format { async = false }
+    vim.cmd 'write'
   end
-  vim.cmd 'write'
 end
-vim.api.nvim_create_autocmd('InsertLeave', {
-  pattern = '*.*',
+vim.api.nvim_create_autocmd({ 'InsertLeave', 'TextChanged' }, {
+  pattern = '*',
   callback = save_and_format,
 })
-vim.api.nvim_create_autocmd('TextChanged', {
-  pattern = '*.*',
-  callback = save_and_format,
-})
-vim.diagnostic.config { virtual_lines = true }
+
 vim.diagnostic.config { virtual_lines = true }
