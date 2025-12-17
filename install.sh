@@ -50,3 +50,7 @@ ln -s ~/dotfiles/nvim ~/.config/nvim
 # Link wezterm to non-standard path
 mkdir -p ~/.config/wezterm/
 ln -s $dir/wezterm.lua ~/.config/wezterm/wezterm.lua
+
+# Link wezterm to non-standard path
+mkdir -p ~/.config/pip/
+ln -s $dir/pip.conf ~/.config/pip/pip.conf
