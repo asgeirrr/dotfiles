@@ -58,7 +58,6 @@ alias pcp='podman compose'
 alias switchcards='rm ~/.gnupg/private-keys-v1.d/BBCCC06A5324A6E6680E7D9AEDBB675A44FB56F8.key ~/.gnupg/private-keys-v1.d/6F78487DCDF7664CB19CA1F336A2DDB1AA898DEF.key ~/.gnupg/private-keys-v1.d/9DA10D269C50F2F761FA5AD8053E87E073FB20A3.key && gpg --card-status'
 alias vim="nvim"
 alias dbdrop='DB_SERVICE=$(dcp ps --services | rg postgres); DB_NAME=$(dcp exec $DB_SERVICE bash -c "psql -U postgres -c \"SELECT datname FROM pg_database;\"" | tail -n +3 | head -n -2 | fzf); dcp exec $DB_SERVICE bash -c "psql -U postgres -d $DB_NAME -c \"drop schema public cascade; create schema public;\""'
-alias conda="micromamba"
 
 function kubuild() {
   CLUSTER="$(basename $(realpath ..))"
@@ -123,9 +122,10 @@ __mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --root-prefix "$MAMBA_ROOT_
 if [ $? -eq 0 ]; then
     eval "$__mamba_setup"
 else
-    alias micromamba="$MAMBA_EXE"  # Fallback on help from mamba activate
+    alias micromamba="$MAMBA_EXE"  # Fallback on help from micromamba activate
 fi
 unset __mamba_setup
 # <<< mamba initialize <<<
 
 alias car="micromamba activate rir"
+alias conda="micromamba"
