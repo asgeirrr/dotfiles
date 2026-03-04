@@ -70,11 +70,15 @@ def main():
     dockerfile = build.get("dockerfile", "Dockerfile")
     args_dict = build.get("args", {})
     secrets_list = build.get("secrets", [])
-    image = service.get("image", f"{service_name}:latest")
+    project_name = config.get("name", Path(compose_file).parent.name)
+    image = service.get("image", f"{project_name}-{service_name}:latest")
+
+    # Resolve dockerfile path relative to context (podman expects absolute or cwd-relative path)
+    dockerfile_path = Path(context) / dockerfile if not Path(dockerfile).is_absolute() else Path(dockerfile)
 
     # Build command as list
-    cmd = ["podman", "build", "-t", image, "-f", dockerfile]
-    cmd_display = ["podman", "build", "-t", image, "-f", dockerfile]
+    cmd = ["podman", "build", "-t", image, "-f", str(dockerfile_path)]
+    cmd_display = ["podman", "build", "-t", image, "-f", str(dockerfile_path)]
 
     for key, value in args_dict.items():
         cmd += ["--build-arg", f"{key}={value}"]
