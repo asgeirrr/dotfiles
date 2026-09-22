@@ -2,3 +2,5 @@
 env
 *.mypy_cache
 *.pytest_cache
+
+**/.claude/settings.local.json

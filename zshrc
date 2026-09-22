@@ -91,8 +91,10 @@ source <(kubectl completion zsh)
 
 # Rossum
 export GITLAB_LOGIN_NAME=oskar@rossum.ai
-export PYPI_USERNAME=$GITLAB_LOGIN_NAME
-export PYPI_PASSWORD=$GITLAB_PERSONAL_TOKEN
+export GITLAB_AUTH_HEADER=PRIVATE-TOKEN:${PYPI_PASSWORD}
+export POETRY_HTTP_BASIC_RIR_REPOSITORY_PASSWORD=$PYPI_PASSWORD
+export POETRY_HTTP_BASIC_SEX_REPOSITORY_PASSWORD=$PYPI_PASSWORD
+export POETRY_HTTP_BASIC_ROSSUM_OPENTELEMETRY_INSTRUMENTATION_REPOSITORY_PASSWORD=$PYPI_PASSWORD
 export POSTGRES_PORT=5432
 export RABBITMQ_PORT=5672
 export MINIO_PORT=9000
@@ -113,6 +115,9 @@ export MOZ_ENABLE_WAYLAND=1
 
 # Faster command line prompt
 eval "$(starship init zsh)"
+
+# direnv (auto-loads .envrc / nix flake dev shells)
+eval "$(direnv hook zsh)"
 
 # >>> mamba initialize >>>
 # !! Contents within this block are managed by 'micromamba shell init' !!

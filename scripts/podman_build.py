@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 
 import argparse
-from pathlib import Path
-import subprocess
 import os
+import subprocess
 import sys
+from pathlib import Path
+
 import yaml
 
 

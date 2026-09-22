@@ -162,6 +162,10 @@ vim.opt.tags = { '.git/tags' }
 -- Grep customization
 vim.opt.grepprg = "rg --vimgrep --smart-case --hidden --glob '!.git/**'"
 vim.opt.grepformat = '%f:%l:%c:%m'
+vim.cmd.packadd 'cfilter'
+vim.api.nvim_create_user_command('DropTests', function()
+  vim.cmd [[Cfilter! /\/tests\//]]
+end, { desc = 'Remove test paths from the quickfix list' })
 
 -- Create a custom command to run grep and send results to quickfix
 vim.api.nvim_create_user_command('Rg', function(opts)
@@ -193,6 +197,15 @@ end
 vim.api.nvim_create_user_command('ToggleLspLines', toggle_lsp_lines, {
   desc = 'Toggle LSP lines diagnostics on/off',
 })
+
+
+vim.api.nvim_create_user_command('FormatTable', '<line1>,<line2>!tr -s " " | column -t -s "|" -o "|"',
+  {
+    range = true,
+    desc = 'Format markdown table',
+  }
+)
+
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
