@@ -84,19 +84,16 @@
     extraPackages = with pkgs; [
       gnumake
       lua-language-server
-      python3Packages.python-lsp-server
       unzip
     ];
   };
 
   programs.ripgrep.enable = true;
-  programs.ruff.enable = true;
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
   };
   programs.stylua.enable = true;
-  programs.ty.enable = true;
 
   programs.zsh = {
     enable = true;
