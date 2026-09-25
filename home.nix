@@ -1,14 +1,15 @@
 {
   config,
+  homeDirectory,
   lib,
   pkgs,
+  username,
   ...
 }:
 
 {
   home = {
-    username = "oskar";
-    homeDirectory = "/home/oskar";
+    inherit homeDirectory username;
     stateVersion = "26.05";
 
     packages = with pkgs; [

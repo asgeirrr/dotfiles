@@ -47,17 +47,17 @@ alias dbdrop='DB_SERVICE=$(dcp ps --services | rg postgres); DB_NAME=$(dcp exec 
 
 function kubuild() {
   CLUSTER="$(basename $(realpath ..))"
-  kustomize build $1 | fluxsubst /home/oskar/rossum/deployments/${AWS_PROFILE}/${CLUSTER_NAME}/manifests/flux-system/configmap-cluster-variables.yaml
+  kustomize build $1 | fluxsubst "$HOME/rossum/deployments/${AWS_PROFILE}/${CLUSTER_NAME}/manifests/flux-system/configmap-cluster-variables.yaml"
 }
 # ENV SETTINGS
 PATH=$PATH:/usr/share/git/diff-highlight/
-PATH=$PATH:/home/oskar/.cargo/bin
+PATH=$PATH:$HOME/.cargo/bin
 
-PATH=$PATH:/home/oskar/.local/share/gem/ruby/3.0.0/bin
+PATH=$PATH:$HOME/.local/share/gem/ruby/3.0.0/bin
 export GEM_HOME="$(gem env user_gemhome)"
 export PATH="$PATH:$GEM_HOME/bin"
 
-export PATH=$PATH:/home/oskar/go/bin
+export PATH=$PATH:$HOME/go/bin
 
 export BUILDAH_FORMAT=docker # Make podman work with docker-style Dockerfiles
 export DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock # Enable rootless use of podman as docker
@@ -84,7 +84,7 @@ export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 # r8-utils
 export R8TEAM=rir
-export R8PATH=/home/oskar/.rossum
+export R8PATH=$HOME/.rossum
 if [ -f "${R8PATH}/r8-utils/scripts/inlined/functions.sh" ]; then
   . "${R8PATH}/r8-utils/scripts/inlined/functions.sh"
 fi
@@ -98,7 +98,7 @@ export MOZ_ENABLE_WAYLAND=1
 # >>> mamba initialize >>>
 # !! Contents within this block are managed by 'micromamba shell init' !!
 export MAMBA_EXE='/usr/bin/micromamba';
-export MAMBA_ROOT_PREFIX='/home/oskar/.conda';
+export MAMBA_ROOT_PREFIX="$HOME/.conda";
 __mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --root-prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__mamba_setup"

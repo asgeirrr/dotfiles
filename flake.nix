@@ -14,11 +14,18 @@
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
+      mkHome =
+        username: homeDirectory:
+        home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          extraSpecialArgs = { inherit homeDirectory username; };
+          modules = [ ./home.nix ];
+        };
     in
     {
-      homeConfigurations.oskar = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        modules = [ ./home.nix ];
+      homeConfigurations = {
+        oskar = mkHome "oskar" "/home/oskar";
+        "oskar.hollmann" = mkHome "oskar.hollmann" "/home/oskar.hollmann";
       };
 
       packages.${system}.home-manager = home-manager.packages.${system}.home-manager;
